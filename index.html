@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard - Real-time Weather Information</title>
+    <meta name="description" content="Get real-time weather information with location-based forecasts, temperature, conditions, and 5-day forecasts. Perfect for travel planning and daily convenience.">
+    <meta name="author" content="Weather Dashboard">
+    <meta name="keywords" content="weather, forecast, temperature, real-time weather, location weather, weather dashboard">
+    
+    <meta property="og:title" content="Weather Dashboard - Real-time Weather Information">
+    <meta property="og:description" content="Get real-time weather information with location-based forecasts, temperature, conditions, and 5-day forecasts.">
+    <meta property="og:type" content="website">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app" class="app bg-weather-default">
+        <div class="container">
+            <!-- Header -->
+            <header class="header">
+                <h1 class="header-title">Weather Dashboard</h1>
+                <p class="header-subtitle">Real-time weather information at your fingertips</p>
+            </header>
+
+            <!-- Search Section -->
+            <section class="search-section">
+                <div class="search-card glass">
+                    <form id="search-form" class="search-form">
+                        <div class="search-input-wrapper">
+                            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                            <input 
+                                type="text" 
+                                id="city-input" 
+                                placeholder="Search for a city..." 
+                                class="search-input"
+                                disabled
+                            >
+                        </div>
+                        
+                        <div class="search-buttons">
+                            <button type="submit" id="search-btn" class="btn btn-primary" disabled>
+                                <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.35-4.35"></path>
+                                </svg>
+                            </button>
+                            
+                            <button type="button" id="location-btn" class="btn btn-outline" disabled>
+                                <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <div id="loading" class="loading hidden">
+                <div class="loading-spinner"></div>
+                <p class="loading-text">Loading weather data...</p>
+            </div>
+
+            <!-- Current Weather -->
+            <section id="current-weather" class="current-weather hidden">
+                <div class="weather-card glass">
+                    <div class="current-weather-main">
+                        <div class="weather-display">
+                            <div id="weather-icon" class="weather-icon-large"></div>
+                            <div class="temperature-display">
+                                <div id="temperature" class="temperature">--°</div>
+                                <div id="description" class="weather-description">Loading...</div>
+                            </div>
+                        </div>
+                        
+                        <div class="location-display">
+                            <div id="location" class="location-name">Loading...</div>
+                        </div>
+                    </div>
+
+                    <div class="weather-stats">
+                        <div class="stat-item">
+                            <svg class="stat-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                            </svg>
+                            <div class="stat-content">
+                                <div class="stat-label">Humidity</div>
+                                <div id="humidity" class="stat-value">--%</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-item">
+                            <svg class="stat-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"></path>
+                                <path d="M9.6 4.6A2 2 0 1 1 11 8H2"></path>
+                                <path d="M12.6 19.4A2 2 0 1 0 14 16H2"></path>
+                            </svg>
+                            <div class="stat-content">
+                                <div class="stat-label">Wind</div>
+                                <div id="wind" class="stat-value">-- km/h</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-item">
+                            <svg class="stat-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <div class="stat-content">
+                                <div class="stat-label">Visibility</div>
+                                <div id="visibility" class="stat-value">-- km</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-item">
+                            <svg class="stat-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polygon points="12,6 12,12 16,14"></polygon>
+                            </svg>
+                            <div class="stat-content">
+                                <div class="stat-label">Pressure</div>
+                                <div id="pressure" class="stat-value">-- hPa</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-item">
+                            <svg class="stat-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3z"></path>
+                                <path d="M12 22a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3z"></path>
+                                <path d="M12 10.5V1"></path>
+                                <path d="M12 23v-9.5"></path>
+                                <path d="M20 12h-1.5"></path>
+                                <path d="M5.5 12H4"></path>
+                            </svg>
+                            <div class="stat-content">
+                                <div class="stat-label">Sunrise</div>
+                                <div id="sunrise" class="stat-value">--:--</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-item">
+                            <svg class="stat-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 10a2 2 0 1 0 4 0c0-1.02-.1-2.51-.26-4"></path>
+                                <path d="M12 2a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3z"></path>
+                                <path d="M12 14v9.5"></path>
+                                <path d="M20 12h-1.5"></path>
+                                <path d="M5.5 12H4"></path>
+                            </svg>
+                            <div class="stat-content">
+                                <div class="stat-label">Sunset</div>
+                                <div id="sunset" class="stat-value">--:--</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Travel Advisory Section -->
+            <section id="travel-advisory" class="travel-advisory hidden">
+                <div class="weather-card glass">
+                    <div class="advisory-header">
+                        <h3 class="advisory-title">Travel Advisory</h3>
+                        <div id="safety-badge" class="safety-badge">
+                            <!-- Safety level badge will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div id="advisory-content" class="advisory-content">
+                        <div class="advisory-message" id="advisory-message">
+                            <!-- Main advisory message -->
+                        </div>
+                        
+                        <div class="advisory-recommendations">
+                            <h4 class="recommendations-title">Recommendations:</h4>
+                            <ul id="recommendations-list" class="recommendations-list">
+                                <!-- Recommendations will be populated by JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5-Day Forecast -->
+            <section id="forecast" class="forecast hidden">
+                <div class="weather-card glass">
+                    <h3 class="forecast-title">5-Day Forecast</h3>
+                    <div id="forecast-list" class="forecast-list">
+                        <!-- Forecast items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Initial State -->
+            <div id="initial-state" class="initial-state">
+                <div class="initial-message">
+                    Search for a city or allow location access to see weather information
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden">
+        <div class="toast-content">
+            <div id="toast-title" class="toast-title"></div>
+            <div id="toast-message" class="toast-message"></div>
+        </div>
+        <button id="toast-close" class="toast-close">×</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
